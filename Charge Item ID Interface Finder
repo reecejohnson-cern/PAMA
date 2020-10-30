@@ -1,3 +1,12 @@
+;;;;;;;;;;;;;;;;;;;;;;
+Purpose: Locate interface carrying AUC charges by CHARGE_ITEM_ID
+
+Created: 2020_10_30
+
+Update log:
+  2020_10_30: CCL created (Johnson, Reece)
+
+;;;;;;;;;;;;;;;;;;;;;;;
 SELECT
 	c.INTERFACE_FILE_ID
 	, ic.INTERFACE_CHARGE_ID
@@ -20,10 +29,13 @@ FROM
 
 PLAN C
 
-WHERE C.charge_item_id = 29123396934
+	WHERE C.charge_item_id = ;;;;;INSERT CHARGE_ITEM_ID
 
-JOIN IC WHERE C.charge_item_id = IC.charge_item_id
+JOIN IC
+	WHERE C.charge_item_id = IC.charge_item_id
 
-JOIN ITF WHERE IC.interface_file_id = itf.interface_file_id
+JOIN ITF
+	WHERE IC.interface_file_id = itf.interface_file_id
 
 WITH TIME = 60
+;;;;;;;;;;;;;;;;;;;;;;;;;;
