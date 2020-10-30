@@ -1,0 +1,26 @@
+;;;;;;;;;;;;;;;;;;;;;;
+Purpose: ORDER_ENTRY_FIELD lookup for OE_FIELD_IDs present in domain. Used to provide OE_FIELD_IDs to qCDSM for mapping
+
+Created: 2020_10_30
+
+Update log:
+  2020_10_30: CCL created (Johnson, Reece)
+
+;;;;;;;;;;;;;;;;;;;;;;;
+SELECT
+	OE_FIELD_ID
+	, DESCRIPTION
+	, CODESET
+
+FROM
+	ORDER_ENTRY_FIELDS
+
+WHERE DESCRIPTION in
+	(
+	"AUC Order Adherence*"
+	,"Qualified*"
+	,"CareSelect*"
+	)
+
+WITH TIME = 60
+;;;;;;;;;;;;;;;;;;;;;;;;;;
