@@ -1,3 +1,13 @@
+;;;;;;;;;;;;;;;;;;;;;;
+Purpose: Review radiology orders of first acting user vs. provider of record for order. Names for action and provider users can be added from prsnl (P & P2) if needed
+
+Created: 2020_10_30
+
+Update log:
+  2020_10_30: CCL created (Johnson, Reece)
+
+;;;;;;;;;;;;;;;;;;;;;;;
+
 SELECT DISTINCT
 	ORDER_CATALOG_DISP = O.ORDER_MNEMONIC
 	, ORDER_ID = O.order_id
@@ -44,3 +54,5 @@ JOIN P WHERE OA.action_personnel_id = P.person_id
 JOIN P2 WHERE OA.order_provider_id = p2.person_id
 
 WITH NOCOUNTER, SEPARATOR=" ", FORMAT, TIME = 600
+
+;;;;;;;;;;;;;;;;;;;;;;
