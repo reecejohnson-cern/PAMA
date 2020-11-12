@@ -1,3 +1,16 @@
+;;;;;;;;;;;;;;;;;;;;;;
+Purpose: View privs set at specific position level (position code set = 88)
+	-Who can propose?
+	-Who can order?
+	-Who can approve proposals?
+
+Created: 2020_11/12
+
+Update log:
+  2020_11_12: CCL created (Johnson, Reece)
+
+;;;;;;;;;;;;;;;;;;;;;;;
+
 ;Priv dictionary 6016
 
 SELECT
