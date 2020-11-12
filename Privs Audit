@@ -1,0 +1,45 @@
+;Priv dictionary 6016
+
+SELECT
+	position = cv3.display
+	, priv = cv2.display
+	, value = cv4.display
+	, exception_type = cv5.display
+	, exception_value = cv.display
+	, p.updt_dt_tm
+	, pr.ppr_cd
+	, pr.location_cd
+	, pr.person_id
+
+FROM
+	privilege   p
+	, priv_loc_reltn   pr
+	, privilege_exception   pe
+	, code_value   cv2
+	, code_value   cv3
+	, code_value   cv4
+	, code_value   cv
+	, code_value   cv5
+
+plan p
+	where p.active_ind = 1
+join pr
+	where pr.active_ind = 1
+	;and pr.position_cd = [Position_cd from code set 88]
+	and pr.priv_loc_reltn_id = p.priv_loc_reltn_id
+join cv2
+	where cv2.code_value = p.privilege_cd
+join cv3
+	where cv3.code_value = pr.position_CD
+join cv4
+	where cv4.code_value = p.priv_value_CD
+join pe
+	where pe.privilege_id = outerjoin(p.privilege_id)
+join cv
+	where cv.code_value = outerjoin(pe.exception_type_cd)
+join cv5
+	where cv5.code_value = outerjoin(pe.exception_id)
+
+WITH MAXREC = 1000, Time = 60
+
+;;;;;;;;;;;;;;;;;;;;;;;
