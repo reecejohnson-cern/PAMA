@@ -1,0 +1,52 @@
+SELECT
+	O_CATALOG_DISP = UAR_GET_CODE_DISPLAY(O.CATALOG_CD)
+                , O_CATALOG_TYPE_DISP = UAR_GET_CODE_DISPLAY(O.CATALOG_TYPE_CD)
+                , OC_ACTIVITY_SUBTYPE_DISP = UAR_GET_CODE_DISPLAY(OC.ACTIVITY_SUBTYPE_CD)
+                , OC.CATALOG_CD
+                , E_ENCNTR_TYPE_DISP = UAR_GET_CODE_DISPLAY(E.ENCNTR_TYPE_CD)
+                , O_ORDER_STATUS_DISP = UAR_GET_CODE_DISPLAY(O.ORDER_STATUS_CD)
+                , O.ORIG_ORDER_DT_TM "SHORTDATE"
+                , O.ORDER_ID
+                , OD.OE_FIELD_DISPLAY_VALUE
+                , OD.OE_FIELD_MEANING
+                , E_ENCNTR_TYPE_CLASS_DISP = UAR_GET_CODE_DISPLAY(E.ENCNTR_TYPE_CLASS_CD)
+ 
+FROM
+                ORDER_CATALOG   OC
+                , ORDERS   O
+                , ENCOUNTER   E
+                , ORDER_DETAIL   OD
+ 
+Plan OC
+    where OC.CATALOG_TYPE_CD = value(uar_get_code_by("MEANING",6000,"RADIOLOGY")) 
+    
+	and oc.activity_subtype_cd in
+	
+	(
+	value(uar_get_code_by("MEANING",5801,"MR"))
+	, value(uar_get_code_by("MEANING",5801,"CT"))
+	, value(uar_get_code_by("MEANING",5801,"NM"))
+	, value(uar_get_code_by("MEANING",5801,"PT"))
+	, value(uar_get_code_by("MEANING",5801,"MRI"))
+	, value(uar_get_code_by("MEANING",5801,"NUCMED"))
+	, value(uar_get_code_by("MEANING",5801,"PET"))
+	)   
+	                
+join O where OC.CATALOG_CD = O.CATALOG_CD 
+    AND O.ORIG_ORDER_DT_TM BETWEEN
+    CNVTDATETIME("12-MAR-2020 00:00:00.00") ;Update start dates ;6 month look back
+    AND
+    CNVTDATETIME("11-JUN-2020 23:59:59.00") ;Update end dates
+
+ 
+join E where O.originating_encntr_id = E.ENCNTR_ID           
+                
+join OD where o.order_id = od.order_id 
+    and OD.OE_FIELD_MEANING_ID =  1501.00  
+        
+ORDER BY
+                O_CATALOG_TYPE_DISP
+                , OC_ACTIVITY_SUBTYPE_DISP
+                , O_CATALOG_DISP
+
+WITH TIME = 1200
