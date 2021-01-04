@@ -5,6 +5,13 @@ Created: 2021_01_04
 
 Update log:
   2021_01_04: CCL created (Johnson, Reece)
+  
+Details:
+ 	-If the query does not pull back a full 6-month export you will need to break up the timing with new intervals. Run 3 month intervals and paste results into one spreadsheet for full 6 month view
+	-If CRM security message presents when running the query, you are attempting to pull too much data for your account's security settings. Further limit the date/ time range to shorter interval as needed
+	
+ 	-Once reports have been generated for a full 180-day timeframe, condense all data into one excel sheet and send to NDSC PM
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
