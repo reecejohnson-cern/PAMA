@@ -1,3 +1,13 @@
+;;;;;;;;;;;;;;;;;;;;;;
+Purpose: Send order utilization history to NDSC to set mapping information at project outset.
+
+Created: 2021_01_04
+
+Update log:
+  2021_01_04: CCL created (Johnson, Reece)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 SELECT
 	O_CATALOG_DISP = UAR_GET_CODE_DISPLAY(O.CATALOG_CD)
                 , O_CATALOG_TYPE_DISP = UAR_GET_CODE_DISPLAY(O.CATALOG_TYPE_CD)
@@ -19,18 +29,6 @@ FROM
  
 Plan OC
     where OC.CATALOG_TYPE_CD = value(uar_get_code_by("MEANING",6000,"RADIOLOGY")) 
-    
-	and oc.activity_subtype_cd in
-	
-	(
-	value(uar_get_code_by("MEANING",5801,"MR"))
-	, value(uar_get_code_by("MEANING",5801,"CT"))
-	, value(uar_get_code_by("MEANING",5801,"NM"))
-	, value(uar_get_code_by("MEANING",5801,"PT"))
-	, value(uar_get_code_by("MEANING",5801,"MRI"))
-	, value(uar_get_code_by("MEANING",5801,"NUCMED"))
-	, value(uar_get_code_by("MEANING",5801,"PET"))
-	)   
 	                
 join O where OC.CATALOG_CD = O.CATALOG_CD 
     AND O.ORIG_ORDER_DT_TM BETWEEN
@@ -50,3 +48,6 @@ ORDER BY
                 , O_CATALOG_DISP
 
 WITH TIME = 1200
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
