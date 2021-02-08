@@ -1,0 +1,44 @@
+;Bill Only Finder
+
+SELECT
+    PRIMARY_SYNONYM = OC.PRIMARY_MNEMONIC
+    , BILL_ONLY_ITEMS = D.MNEMONIC
+    , DEFAULT_QUANTITY = B1.STANDARD_QTY
+    , BILL_ONLY_CATEGORY = CV1.DESCRIPTION
+ 
+FROM
+    ORDER_CATALOG   OC
+    , BILL_ONLY_PROC_RELTN   B1
+    , BILL_ONLY_PROC_RELTN   B2
+    , DISCRETE_TASK_ASSAY   D
+    , CODE_VALUE   CV1
+    , DUMMYT   D1
+    , DUMMYT   D2
+ 
+PLAN OC WHERE OC.ACTIVE_IND = 1  AND
+    OC.activity_subtype_cd in ;VERIFY ACTIVITY SUBTYPES
+    
+    (
+    value(uar_get_code_by("MEANING",5801,"MRI"))
+    , value(uar_get_code_by("MEANING",5801,"MR"))
+    , value(uar_get_code_by("MEANING",5801,"CT"))
+    , value(uar_get_code_by("MEANING",5801,"NM"))
+    , value(uar_get_code_by("MEANING",5801,"PT"))
+    , value(uar_get_code_by("MEANING",5801,"PET"))
+    , value(uar_get_code_by("MEANING",5801,"NUCMED"))
+    )  
+ 
+
+JOIN D1  JOIN(B1 
+WHERE B1.CATALOG_CD = OC.CATALOG_CD  AND B1.ENTITY_NAME = "DISCRETE_TASK_ASSAY"
+JOIN D WHERE D.TASK_ASSAY_CD=B1.ENTITY_ID)
+ORJOIN D2  JOIN(B2 
+WHERE B2.CATALOG_CD=OC.CATALOG_CD  AND B2.ENTITY_NAME="CODE_VALUE"
+JOIN CV1 WHERE CV1.CODE_VALUE=B2.ENTITY_ID)
+ 
+ORDER BY
+    PRIMARY_SYNONYM
+    , BILL_ONLY_CATEGORY
+    , BILL_ONLY_ITEMS
+    
+WITH TIME = 60
