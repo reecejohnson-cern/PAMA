@@ -1,4 +1,11 @@
-;Bill Only Finder
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Purpose: Locate any bill only orders that are in the radiology catalog with an advanced imaging subtype
+Created: 2021_02_08
+
+Update log:
+  2021_02_08: CCL created (Johnson, Reece)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 SELECT
     PRIMARY_SYNONYM = OC.PRIMARY_MNEMONIC
@@ -42,3 +49,5 @@ ORDER BY
     , BILL_ONLY_ITEMS
     
 WITH TIME = 60
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
