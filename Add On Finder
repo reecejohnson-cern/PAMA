@@ -1,0 +1,52 @@
+SELECT
+    Activity_type = uar_get_code_display(b.ext_owner_cd)
+    , p_bill_item_id = b.bill_item_id
+    , p_description = b.ext_description
+    , orderable_name = UAR_GET_CODE_DISPLAY(oc.catalog_cd)
+    , c_bill_item_id = bi.key1_id
+    , c_description = bi.key6
+    , c_quantity = bi.bim1_int
+
+ 
+
+FROM
+    bill_item   b
+    , bill_item_modifier   bi
+    , order_catalog    oc
+
+ 
+
+plan b
+  where b.active_ind = 1
+  and b.ext_owner_cd = 711
+  
+join bi
+  where bi.active_ind = 1
+  and bi.bill_item_id = b.bill_item_id
+  and bi.bill_item_type_cd = 3457
+  
+join oc
+  where oc.active_ind = 1
+  and b.ext_parent_reference_id = oc.catalog_cd
+  and oc.activity_subtype_cd in 
+    (
+    value(uar_get_code_by("MEANING",5801,"MR"))
+    , value(uar_get_code_by("MEANING",5801,"CT"))
+    , value(uar_get_code_by("MEANING",5801,"NM"))
+    , value(uar_get_code_by("MEANING",5801,"PT"))
+    , value(uar_get_code_by("MEANING",5801,"MRI"))
+    , value(uar_get_code_by("MEANING",5801,"NUCMED"))
+    , value(uar_get_code_by("MEANING",5801,"PET"))
+    )   
+
+ 
+
+
+ORDER BY
+    Activity_type
+    , p_description
+    , c_description
+
+ 
+
+WITH time = 60
