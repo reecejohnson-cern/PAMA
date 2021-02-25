@@ -25,7 +25,7 @@ FROM
 
 PLAN OC
 
-	WHERE oc.catalog_type_cd = 2517 ; Verify radiology catalog_type_cd
+	WHERE oc.catalog_type_cd = value(uar_get_code_by("MEANING",6000,"RADIOLOGY")) ; Verify radiology catalog_type_cd
     and OC.activity_subtype_cd in ;VERIFY ACTIVITY SUBTYPES
     (
     value(uar_get_code_by("MEANING",5801,"MRI"))
@@ -38,17 +38,16 @@ PLAN OC
     )  
     
 JOIN O  WHERE OC.catalog_cd = o.catalog_cd
-  AND O.orig_order_dt_tm BETWEEN CNVTDATETIME("22-NOV-2019 08:30:00.00") and CNVTDATETIME("24-FEB-2020 23:59:59.00")  ;UPDATE ;DATES
-
+  AND O.orig_order_dt_tm BETWEEN CNVTDATETIME("24-FEB-2020 08:30:00.00") and CNVTDATETIME("24-FEB-2021 23:59:59.00")  ;UPDATE ;DATES
 
   JOIN OA WHERE O.order_id = oa.order_id 
-    and oa.action_type_cd = 2534 ;ORDER_ACTION ;COMMENT OUT FOR ALL
+    and oa.action_type_cd = value(uar_get_code_by("MEANING",6003,"ORDER")) ;ORDER_ACTION ;COMMENT OUT FOR ALL
 
   JOIN E WHERE  o.originating_encntr_id = E.encntr_id
   	and e.encntr_type_cd = 309310 ;Verify ED encntr_type_cd
 
   JOIN CE WHERE O.originating_encntr_id = ce.encntr_id
-    and ce.event_cd = 3601999    ;Tracking Acuity Value from EVENT_CD
+    and ce.event_cd = 3346954    ;Tracking Acuity Value from EVENT_CD 
     and ce.performed_dt_tm between e.reg_dt_tm and o.orig_order_dt_tm
 
 WITH MAXREC = 10000, NOCOUNTER, SEPARATOR=" ", FORMAT, TIME = 600
