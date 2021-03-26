@@ -46,7 +46,7 @@ JOIN O  WHERE OC.catalog_cd = o.catalog_cd
     AND O.orig_order_dt_tm BETWEEN CNVTDATETIME("01-JAN-2020 00:01:00.00") and CNVTDATETIME("01-SEP-2020 23:59:59.00");UPDATE;DATES
 
 JOIN OA WHERE O.order_id = oa.order_id 
-  and oa.action_type_cd = = value(uar_get_code_by("MEANING",6003,"ORDER"))
+  and oa.action_type_cd = value(uar_get_code_by("MEANING",6003,"ORDER"))
   
 JOIN E WHERE  o.originating_encntr_id = E.encntr_id
   
