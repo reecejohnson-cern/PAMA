@@ -1,3 +1,6 @@
+;2021.04.07 created variable references for FIN and action type code
+
+
 SELECT DISTINCT
 	O.catalog_cd
 	, ORDER_NAME = UAR_GET_CODE_DISPLAY(O.CATALOG_CD)
@@ -18,9 +21,9 @@ SELECT DISTINCT
 	, ENCNTR_TYPE = UAR_GET_CODE_DISPLAY(E.ENCNTR_TYPE_CD)
 	, ENCNTR_TYPE_CLASS = UAR_GET_CODE_DISPLAY(E.ENCNTR_TYPE_CLASS_CD)
 	, ENCNTR_CLASS_DISP = UAR_GET_CODE_DISPLAY(E.ENCNTR_CLASS_CD)
-;	, LOC_FACILITY_DISP = UAR_GET_CODE_DISPLAY(E.LOC_FACILITY_CD)
-;	, LOC_BUILDING_DISP = UAR_GET_CODE_DISPLAY(E.LOC_BUILDING_CD)
-;	, LOC_NURSE_UNIT_DISP = UAR_GET_CODE_DISPLAY(E.LOC_NURSE_UNIT_CD)
+	, LOC_FACILITY_DISP = UAR_GET_CODE_DISPLAY(E.LOC_FACILITY_CD)
+	, LOC_BUILDING_DISP = UAR_GET_CODE_DISPLAY(E.LOC_BUILDING_CD)
+	, LOC_NURSE_UNIT_DISP = UAR_GET_CODE_DISPLAY(E.LOC_NURSE_UNIT_CD)
 
 FROM
 	ORDERS   O
@@ -34,11 +37,12 @@ FROM
 	, ORDER_DETAIL   OD2   ; SCORE
 	, ENCOUNTER   E
 	, ORDER_DETAIL   OD3   ; AUC MOD
-	, ORDER_DETAIL   OD4   ; G CODE
+	, ORDER_DETAIL   OD4
 
+; G CODE
 PLAN O
 
-  WHERE O.orig_order_dt_tm BETWEEN CNVTDATETIME("24-AUG-2020 00:30:00.00") and CNVTDATETIME("31-AUG-2020 23:59:59.00")  
+  WHERE O.orig_order_dt_tm BETWEEN CNVTDATETIME("01-JAN-2021 00:30:00.00") and CNVTDATETIME("31-MAR-2021 23:59:59.00")  
 ;UPDATE ;DATES
 
   JOIN OC WHERE O.catalog_cd = oc.catalog_cd
@@ -55,19 +59,16 @@ PLAN O
     )  
 
   JOIN OD WHERE outerjoin(O.order_id) = od.order_id 
-    and od.oe_field_id = outerjoin(2834950121) ;DSN
+    and od.oe_field_id = outerjoin(4636956977) ;DSN
     ;and od.oe_field_display_value = NULL ;ONLY BRING BACK MISSING DSN ;COMMENT OUT FOR ALL
 
-
   JOIN OA WHERE O.order_id = oa.order_id 
-    and oa.action_type_cd in (
-     2534
-)  ;ORDER_ACTION ;COMMENT OUT FOR ALL
+    and oa.action_type_cd = value(uar_get_code_by("MEANING",6003,"ORDER")) ;ORDER_ACTION ;COMMENT OUT FOR ALL
 
   JOIN P WHERE OA.order_provider_id = p.person_id
 
   JOIN EA WHERE outerjoin(O.originating_encntr_id) = EA.encntr_id
-    and ea.encntr_alias_type_cd = outerjoin(1077) ;CLIENT FIN ID
+    and ea.encntr_alias_type_cd = value(uar_get_code_by("MEANING",319,"FIN NBR")) ;CLIENT FIN ID
     ;and ea.alias = "zzzzzzzz" ;if searching by FIN
 
 ;  JOIN PER WHERE O.person_id = PER.person_id
@@ -75,7 +76,7 @@ PLAN O
   JOIN P2 WHERE oa.action_personnel_id = p2.person_id
 
   JOIN OD2 WHERE outerjoin (O.order_id) = od2.order_id
-    and od2.oe_field_id = outerjoin (2505813411) ;SCORE
+    and od2.oe_field_id = outerjoin (4636957015) ;SCORE
 
   JOIN E WHERE  o.originating_encntr_id = E.encntr_id
 
