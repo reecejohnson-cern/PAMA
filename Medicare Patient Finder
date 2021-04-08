@@ -1,0 +1,23 @@
+
+
+
+SELECT
+	P.name_full_formatted
+	, FIN = EA.ALIAS
+	, E_ENCNTR_TYPE_DISP = UAR_GET_CODE_DISPLAY(E.ENCNTR_TYPE_CD)
+	, E_ENCNTR_TYPE_CLASS_DISP = UAR_GET_CODE_DISPLAY(E.ENCNTR_TYPE_CLASS_CD)
+
+FROM
+	ENCOUNTER   E
+	, PERSON   P
+	, ENCNTR_ALIAS EA
+
+PLAN E
+WHERE E.financial_class_cd =value(UAR_GET_CODE_BY("MEANING",354,"MEDICARE")) 
+
+JOIN P WHERE E.person_id = P.person_id
+
+JOIN EA WHERE E.encntr_id = EA.encntr_id
+    and EA.encntr_alias_type_cd = value(uar_get_code_by("MEANING",319,"FIN NBR"))
+
+WITH MAXREC = 1000, time = 60
