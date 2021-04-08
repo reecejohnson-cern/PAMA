@@ -14,6 +14,7 @@ SELECT
 	, FIN = EA.ALIAS
 	, E_ENCNTR_TYPE_DISP = UAR_GET_CODE_DISPLAY(E.ENCNTR_TYPE_CD)
 	, E_ENCNTR_TYPE_CLASS_DISP = UAR_GET_CODE_DISPLAY(E.ENCNTR_TYPE_CLASS_CD)
+	, E.disch_dt_tm
 
 FROM
 	ENCOUNTER   E
@@ -22,6 +23,7 @@ FROM
 
 PLAN E
 WHERE E.financial_class_cd =value(UAR_GET_CODE_BY("MEANING",354,"MEDICARE")) 
+    and E.disch_dt_tm = NULL ;Only pull current encounters not discharged
 
 JOIN P WHERE E.person_id = P.person_id
 
