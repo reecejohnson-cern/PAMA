@@ -5,9 +5,9 @@ Created: 2021_04_08
 
 Update log:
   2021_04_08: CCL created (Johnson, Reece)
+  2021_04_08: Reordered for efficiency. Added encounter class look up as option
 
 ;;;;;;;;;;;;;;;;;;;;;;;
-
 
 SELECT
 	P.name_full_formatted
@@ -21,13 +21,25 @@ FROM
 	, PERSON   P
 	, ENCNTR_ALIAS EA
 
-PLAN E
-WHERE E.financial_class_cd =value(UAR_GET_CODE_BY("MEANING",354,"MEDICARE")) 
-    and E.disch_dt_tm = NULL ;Only pull current encounters not discharged
+PLAN P
+    WHERE P.person_id > 0
 
-JOIN P WHERE E.person_id = P.person_id
+JOIN E WHERE P.person_id = e.person_id
+    AND E.disch_dt_tm = NULL ;Only pull current encounters not discharged ;comment out for all encounters
+    AND E.financial_class_cd =value(UAR_GET_CODE_BY("MEANING",354,"MEDICARE")) 
+    AND E.encntr_type_class_cd in ;Encounter rollup to class
+                                  ;*NOTE- more rollups may exist in code set 69
+                                  ;comment entire block for all encounters 
+        (
+          value(UAR_GET_CODE_BY("MEANING",69,"OUTPATIENT"))
+        , value(UAR_GET_CODE_BY("MEANING",69,"OBSERVATION"))
+        , value(UAR_GET_CODE_BY("MEANING",69,"INPATIENT"))
+        , value(UAR_GET_CODE_BY("MEANING",69,"EMERGENCY"))
+        )                           
 
 JOIN EA WHERE E.encntr_id = EA.encntr_id
     and EA.encntr_alias_type_cd = value(uar_get_code_by("MEANING",319,"FIN NBR"))
 
 WITH MAXREC = 1000, time = 60
+
+;;;;;;;;;;;;;;;;;;;;;;;
