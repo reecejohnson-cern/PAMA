@@ -1,4 +1,12 @@
+;;;;;;;;;;;;;;;;;;;;;;
+Purpose: Locate current Medicare patients for AUC testing
 
+Created: 2021_04_08
+
+Update log:
+  2021_04_08: CCL created (Johnson, Reece)
+
+;;;;;;;;;;;;;;;;;;;;;;;
 
 
 SELECT
