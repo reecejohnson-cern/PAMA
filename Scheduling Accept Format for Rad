@@ -1,0 +1,33 @@
+SELECT
+	orders = uar_get_code_display(soa.catalog_cd)
+	, soa.catalog_cd
+	, appt = uar_get_code_display(soa.appt_type_cd)
+	, ACTIVITY_SUBTYPE = uar_get_code_display(O.activity_subtype_cd)
+	, ACCEPT_FORMAT_NAME = oe.oe_format_name
+
+FROM
+	sch_order_appt   soa
+	, ORDER_CATALOG   O
+	, SCH_APPT_TYPE   S
+	, ORDER_ENTRY_FORMAT_PARENT   OE
+
+PLAN SOA
+
+JOIN O
+	WHERE o.catalog_cd = SOA.catalog_cd
+	
+	AND o.catalog_type_cd in
+		(
+		value(uar_get_code_by("MEANING",6000,"CARDIOLOGY")) 
+		,value(uar_get_code_by("MEANING",6000,"RADIOLOGY"))
+		) 
+	
+JOIN S where soa.appt_type_cd = s.appt_type_cd
+
+JOIN OE WHERE S.oe_format_id = OE.oe_format_id
+
+ORDER BY
+	orders
+	, accept_format_name
+
+WITH TIME = 60
