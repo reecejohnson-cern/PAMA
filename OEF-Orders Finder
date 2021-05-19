@@ -1,0 +1,42 @@
+;;;;;;;;;;;;;;;;;;;;;;
+Purpose: Locate formats containing advanced imaging orders. Filter output in spreadsheet for validation
+
+Created:   2021_05_19
+
+Update log:
+  2021_05_19: CCL created (Johnson, Reece)
+
+;;;;;;;;;;;;;;;;;;;;;;;
+SELECT DISTINCT
+               ; OE.description ;Field name in DCPTools
+               ; , OE.oe_field_id ;Value that NDSC maps to
+               ; , OE.oe_field_meaning_id; Field meaning in DCPTools ;9000 is user-defined
+               ; , OE.CODESET ;Code set field is tied to ; 0 is none
+                 OEF.oe_format_name ;Format name in DCPTools
+               ; , OE.FSI_MAP_TO_OBX_IND ;Enable interface mapping attribute in DCPTools
+                , OEF.catalog_type_cd ;Catalog type of OEF value
+                , OEF_CATALOG_TYPE_DISP = UAR_GET_CODE_DISPLAY(OEF.CATALOG_TYPE_CD) ;Catalog type of OEF name
+                , ACT_SUBTYPE = UAR_GET_CODE_DISPLAY(OC.activity_subtype_cd)
+                , OC.primary_mnemonic
+                
+ 
+FROM
+                ORDER_ENTRY_FIELDS   OE
+                , ORDER_ENTRY_FORMAT   OEF
+                , OE_FORMAT_FIELDS   OEFF
+                , ORDER_CATALOG	OC
+ 
+PLAN OE
+                
+JOIN OEFF where OEFF.oe_field_id = oe.oe_field_id
+ 
+JOIN OEF WHERE OEFF.oe_format_id = OEF.oe_format_id
+
+JOIN OC WHERE OEFF.oe_format_id = OC.oe_format_id
+ and oc.catalog_type_cd = value(uar_get_code_by("MEANING",6000,"RADIOLOGY")) 
+ 
+ORDER BY
+        OEF.oe_format_name
+ 
+WITH TIME = 60
+;;;;;;;;;;;;;;;;;;;;;;;;;;
