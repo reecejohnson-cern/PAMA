@@ -1,6 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;
-Purpose: Audit what fields are on what order entry formats. View code set connections and field meanings for PAMA_BILLING integration. View OE_FIELD_IDs for NDSC field mapping
-
+Purpose: Audit what fields are on what order entry formats. View code set connections and field meanings for PAMA_BILLING integration.
 Created: 2020_10_30
 
 Update log:
