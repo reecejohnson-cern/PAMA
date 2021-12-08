@@ -1,0 +1,53 @@
+select distinct
+
+pc.description
+, pc.pathway_catalog_id
+;, pcr.type_mean
+, ocs.mnemonic
+, ocs.catalog_cd
+, type=uar_get_code_display(ocs.mnemonic_type_cd)
+, cat_type=uar_get_code_display(ocs.catalog_type_cd)
+, act_type=uar_get_code_display(ocs.activity_type_cd)
+, sub_act_type=uar_get_code_display(ocs.activity_subtype_cd)
+, p.required_ind
+, os.order_sentence_display_line
+, RFE_FT = OSD.oe_field_display_value
+, RFE_DCP = OSD2.oe_field_display_value
+
+from
+pathway_comp  p
+, pathway_catalog pc
+, pathway_catalog pcnest
+, outcome_catalog ocat
+, pw_comp_os_reltn  pco
+, order_sentence  os
+, order_catalog_synonym ocs
+, long_text lt
+, long_text lt1
+, dummyt d
+, ORDER_SENTENCE_DETAIL OSD
+, ORDER_SENTENCE_DETAIL OSD2
+
+plan pc where pc.type_mean in ("CAREPLAN" ,"PATHWAY")
+and pc.active_ind =1 ;active powerplan
+join p where p.pathway_catalog_id = pc.pathway_catalog_id
+and p.active_ind = 1 ;active
+;and p.required_ind = 1 ;required
+join ocat where ocat.outcome_catalog_id = outerjoin(p.parent_entity_id)
+join pcnest where pcnest.pathway_catalog_id = outerjoin(p.parent_entity_id)
+join lt where lt.long_text_id = outerjoin(p.parent_entity_id)
+and lt.parent_entity_name = outerjoin("PATHWAY_COMP")
+join ocs where ocs.synonym_id = outerjoin(p.parent_entity_id)
+
+join pco where pco.pathway_comp_id = outerjoin(p.pathway_comp_id)
+join os where os.order_sentence_id = outerjoin(pco.order_sentence_id)
+join lt1 where lt1.long_text_id = outerjoin(os.ord_comment_long_text_id)
+join osd where outerjoin(os.order_sentence_id) = osd.order_sentence_id
+ and osd.oe_field_id = outerjoin(12683)
+JOIN OSD2 where outerjoin(os.order_sentence_id) = osd2.order_sentence_id
+and osd2.oe_field_id = outerjoin(12684)
+ 
+join d
+order by pc.description,p.sequence
+
+WITH MAXREC = 10000, TIME = 60
