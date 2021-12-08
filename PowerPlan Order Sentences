@@ -1,3 +1,14 @@
+;;;;;;;;;;;;;;;;;;;;;;
+Purpose: Review PowerPlans containing order sentence options at display line and specific field level. This is a reference build audit, not activity.
+
+Created: 2021_12_08
+
+Update log:
+  2021_12_08: CCL created (Johnson, Reece)
+
+;;;;;;;;;;;;;;;;;;;;;;;
+
+
 select distinct
 
 pc.description
